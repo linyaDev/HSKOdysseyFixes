@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>HSKOdysseyFixes</AssemblyName>
+    <AssemblyName>Fix_CopyPawnKindBasics</AssemblyName>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>12.0</LangVersion>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>..\Assemblies</OutputPath>
+    <OutputPath>..\..\Assemblies</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <RimWorldPath>D:\SteamLibrary\steamapps\common\RimWorld</RimWorldPath>
