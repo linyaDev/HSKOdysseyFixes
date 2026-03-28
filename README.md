@@ -9,6 +9,7 @@ Each fix has its own README in `Source/Fixes/` with detailed description.
 |---|---|---|
 | [CopyPawnKindBasics](Source/Fixes/CopyPawnKindBasics/Fix_CopyPawnKindBasics.README.md) | DLL | Gravship scenario: all pawns spawn wearing vacsuits |
 | [CopyPawnKindTechHediffs](Source/Fixes/CopyPawnKindTechHediffs/Fix_CopyPawnKindTechHediffs.README.md) | DLL | Prevents random mechlink on scenario pawns |
+| [DBH_HotSpringWash](Source/Fixes/DBH_HotSpringWash/Fix_DBH_HotSpringWash.README.md) | DLL | Pawns can wash in Odyssey hot springs (DBH fix) |
 
 ## Structure / Структура
 
@@ -17,16 +18,12 @@ HSKOdysseyFixes/
 ├── About/About.xml
 ├── Assemblies/
 │   ├── Fix_CopyPawnKindBasics.dll
-│   └── Fix_CopyPawnKindTechHediffs.dll
+│   ├── Fix_CopyPawnKindTechHediffs.dll
+│   └── Fix_DBH_HotSpringWash.dll
 ├── Source/Fixes/
 │   ├── CopyPawnKindBasics/
-│   │   ├── Fix_CopyPawnKindBasics.cs
-│   │   ├── Fix_CopyPawnKindBasics.csproj
-│   │   └── Fix_CopyPawnKindBasics.README.md
-│   └── CopyPawnKindTechHediffs/
-│       ├── Fix_CopyPawnKindTechHediffs.cs
-│       ├── Fix_CopyPawnKindTechHediffs.csproj
-│       └── Fix_CopyPawnKindTechHediffs.README.md
+│   ├── CopyPawnKindTechHediffs/
+│   └── DBH_HotSpringWash/
 └── README.md
 ```
 
@@ -35,3 +32,4 @@ HSKOdysseyFixes/
 - Odyssey DLC
 - Hardcore SK modpack
 - Harmony
+- Dubs Bad Hygiene (for HotSpring fix)
