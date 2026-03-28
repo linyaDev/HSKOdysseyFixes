@@ -8,18 +8,52 @@
 
 ## Root Cause / Причина
 
-**EN:** Power conduits use `Graphic_Single` with `linkType: Transmitter`. When a conduit is adjacent to a switch (which has `CompPowerTransmitter`), the conduit draws a linked connection toward the switch's tile. The conduit renders at `altitudeLayer: Conduits`, and the switch at `altitudeLayer: Building`. While Building is above Conduits in the render order, the conduit's linked texture extends into the switch's tile and visually overlaps it due to texture size.
+### How RimWorld renders buildings / Как RimWorld рендерит здания
 
-Additionally, HSK's `Building_PowerSwitchMod.DestroyOtherPowerTransmitter()` destroys any conduit placed directly under the switch, so conduits can only be adjacent — making the linked graphic overlap more visible.
+RimWorld uses two rendering methods:
+1. **MapMeshOnly** — object is baked into the map mesh (one large texture). Fast, but no per-object draw order control. This is how conduits render.
+2. **RealtimeOnly** — object is drawn every frame as a separate sprite. Altitude layer controls draw order. This is how pawns and items render.
 
-**RU:** Кондуиты используют `Graphic_Single` с `linkType: Transmitter`. Когда кондуит рядом с свитчем (у которого есть `CompPowerTransmitter`), кондуит рисует linked-соединение на клетку свитча. Кондуит рендерится на `altitudeLayer: Conduits`, свитч на `altitudeLayer: Building`. Хотя Building выше Conduits, текстура кондуита залезает на клетку свитча.
+RimWorld использует два метода рендеринга:
+1. **MapMeshOnly** — объект запекается в меш карты (одна большая текстура). Быстро, но нет контроля порядка рисования отдельных объектов. Так рисуются кондуиты.
+2. **RealtimeOnly** — объект рисуется каждый кадр как отдельный спрайт. Altitude layer контролирует порядок. Так рисуются пешки и предметы.
 
-Кроме того, `Building_PowerSwitchMod.DestroyOtherPowerTransmitter()` в HSK уничтожает кондуит под свитчем, поэтому кондуиты могут быть только рядом — что делает перекрытие linked-графики более заметным.
+### The problem / Проблема
+
+Both PowerConduit and PowerSwitch use `drawerType: MapMeshOnly`. They are both baked into the **same map mesh**. Within this mesh, draw order is determined by tile bake order, not by `altitudeLayer`. The conduit's linked graphic extends into the switch's tile and may be baked **after** the switch texture — appearing on top.
+
+PowerConduit и PowerSwitch оба используют `drawerType: MapMeshOnly`. Они запекаются в **один и тот же меш карты**. Внутри этого меша порядок рисования определяется порядком запекания тайлов, а не `altitudeLayer`. Linked-графика кондуита заходит на клетку свитча и может запечься **после** текстуры свитча — оказываясь поверх.
+
+### Why altitudeLayer alone doesn't help / Почему altitudeLayer не помогает
+
+Changing `altitudeLayer` to `BuildingOnTop` has no effect when both objects use `MapMeshOnly` — they share the same mesh and altitude only matters for separately drawn sprites.
+
+Изменение `altitudeLayer` на `BuildingOnTop` не помогает когда оба объекта используют `MapMeshOnly` — они в одном меше, и altitude влияет только на отдельно рисуемые спрайты.
+
+### HSK specifics / Особенности HSK
+
+HSK's `Building_PowerSwitchMod.DestroyOtherPowerTransmitter()` destroys conduits placed directly under the switch, forcing conduits to be adjacent — making the linked graphic overlap more visible than in vanilla.
+
+`Building_PowerSwitchMod.DestroyOtherPowerTransmitter()` в HSK уничтожает кондуиты под свитчем, заставляя ставить их рядом — что делает перекрытие linked-графики более заметным, чем в ванилле.
 
 ## Fix / Исправление
 
-**XML patch** — raise `altitudeLayer` from `Building` to `BuildingOnTop`. This is a vanilla-safe layer already used by furniture that sits on top of other buildings.
+C# fix via `[StaticConstructorOnStartup]` — changes two PowerSwitch ThingDef fields at game startup:
 
-**XML патч** — поднимает `altitudeLayer` с `Building` на `BuildingOnTop`. Это безопасный слой, уже используемый ванильной мебелью поверх построек.
+1. `drawerType = RealtimeOnly` — switch is no longer baked into the map mesh, it renders as a separate sprite every frame
+2. `altitudeLayer = BuildingOnTop` — switch renders above conduits, buildings, and other baked objects
 
-No DLL required — pure XML fix in `Patches/Patch_PowerSwitch_DrawOrder.xml`.
+This combination ensures the switch always draws on top of conduit linked graphics.
+
+C# фикс через `[StaticConstructorOnStartup]` — меняет два поля ThingDef PowerSwitch при запуске игры:
+
+1. `drawerType = RealtimeOnly` — свитч больше не запекается в меш карты, рисуется как отдельный спрайт каждый кадр
+2. `altitudeLayer = BuildingOnTop` — свитч рендерится выше кондуитов, зданий и других запечённых объектов
+
+Эта комбинация гарантирует что свитч всегда рисуется поверх linked-графики кондуитов.
+
+### Why XML-only fix doesn't work / Почему XML-фикс не работает
+
+XML patch can change `altitudeLayer` but cannot change `drawerType` — it's set by `BuildingBase` parent def and overridden by the mesh system. Only C# can change it at runtime after all defs are loaded.
+
+XML патч может изменить `altitudeLayer`, но не может изменить `drawerType` — он задаётся родительским дефом `BuildingBase` и переопределяется системой мешей. Только C# может изменить его в рантайме после загрузки всех дефов.
