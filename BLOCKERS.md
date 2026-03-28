@@ -31,7 +31,21 @@ Issues that prevent or significantly hinder playing Odyssey DLC with Hardcore SK
 
 ## Open / Открытые 🔴
 
-_(add new blockers here / добавляйте новые блокеры сюда)_
+### 5. Chem refinery requires reinforced concrete blocks / Переработчик химии требует железобетонные блоки
+- **Status:** Open
+- **Severity:** Critical
+- **Problem:** Chem refinery (chemfuel refinery) requires 25 reinforced concrete blocks to build. On orbital/gravship maps there is no way to obtain reinforced concrete — no research, no resources, no traders.
+- **Проблема:** Переработчик химии требует 25 железобетонных блоков на постройку. На орбитальных/гравикорабельных картах железобетон неоткуда взять — нет исследований, ресурсов, торговцев.
+- **Proposed solutions / Предложения:**
+  1. Add 25 reinforced concrete blocks to Gravship scenario starting items / Дать 25 железобетонных блоков на старте в сценарии
+  2. Simplify the refinery recipe — remove reinforced concrete requirement / Упростить рецепт — убрать требование железобетона
+  3. Create a new simpler refinery variant for orbital use / Сделать новый упрощённый перегонный аппарат для орбиты
+
+### 6. Steam generator requires water / Паровой генератор требует воду
+- **Status:** Open
+- **Severity:** Critical
+- **Problem:** Steam generator requires water connection (DBH water system) which doesn't work on gravship/orbital maps. No water infrastructure available in space.
+- **Проблема:** Паровой генератор требует подключение воды (система воды DBH), которая не работает на картах гравикорабля/орбиты. В космосе нет водной инфраструктуры.
 
 <!--
 Template / Шаблон:
