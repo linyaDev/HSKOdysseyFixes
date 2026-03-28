@@ -5,10 +5,10 @@
 	<Operation Class="PatchOperationAdd" MayRequire="Ludeon.RimWorld.Odyssey">
 		<xpath>Defs/ScenarioDef[defName="TheGravship"]/scenario/parts</xpath>
 		<value>
-			<!-- Hygiene 1 research unlocked from start for water infrastructure -->
+			<!-- Plumbing research unlocked from start for water infrastructure -->
 			<li Class="ScenPart_StartingResearch">
 				<def>StartingResearch</def>
-				<project>DubsBadHygiene</project>
+				<project>Plumbing</project>
 			</li>
 			<!-- 25 reinforced concrete blocks for chem refinery -->
 			<li Class="ScenPart_StartingThing_Defined">
