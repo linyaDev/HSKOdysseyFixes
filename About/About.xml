@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>HSK Odyssey Fixes</name>
+	<author>linyaDev</author>
+	<supportedVersions>
+		<li>1.5</li>
+		<li>1.6</li>
+	</supportedVersions>
+	<packageId>linya.hskodysseyfixes</packageId>
+	<description>
+[English]
+Fixes Odyssey DLC compatibility issues in Hardcore SK modpack.
+
+Bug: In TheGravship scenario, only 3 starting pawns spawn wearing vacsuits. The remaining pawns in the selection pool spawn naked because HSK's CopyPawnKindBasics() doesn't copy vacsuit-related fields.
+
+Root cause: SK.GeneratePawn_DefaultXenotypeRace_Patch in Core_SK.dll randomizes PawnKindDef for extra pawns and calls CopyPawnKindBasics() to transfer apparel settings. However, it misses three critical fields:
+- specificApparelRequirements (forces Vacsuit tag on Torso and FullHead)
+- ignoreApparelAllowChance (bypasses generateAllowChance=0 on vacsuit)
+- apparelAllowHeadgearChance (ensures helmet is generated)
+
+This mod patches CopyPawnKindBasics via Harmony postfix to copy these missing fields.
+
+[Russian]
+Исправляет проблемы совместимости DLC Odyssey с модпаком Hardcore SK.
+
+Баг: В сценарии "Гравикорабль" только 3 стартовые пешки спавнятся в скафандрах. Остальные пешки в пуле выбора появляются без одежды, потому что CopyPawnKindBasics() в Core_SK.dll не копирует поля, отвечающие за генерацию скафандров.
+
+Причина: SK.GeneratePawn_DefaultXenotypeRace_Patch в Core_SK.dll рандомизирует PawnKindDef для дополнительных пешек и вызывает CopyPawnKindBasics() для переноса настроек одежды. Однако три критических поля не копируются:
+- specificApparelRequirements (требует тег Vacsuit на Torso и FullHead)
+- ignoreApparelAllowChance (обходит generateAllowChance=0 у скафандра)
+- apparelAllowHeadgearChance (гарантирует генерацию шлема)
+
+Этот мод патчит CopyPawnKindBasics через Harmony postfix для копирования недостающих полей.
+	</description>
+	<modDependencies>
+		<li>
+			<packageId>brrainz.harmony</packageId>
+			<displayName>Harmony</displayName>
+		</li>
+	</modDependencies>
+	<loadAfter>
+		<li>Ludeon.RimWorld</li>
+		<li>Ludeon.RimWorld.Odyssey</li>
+		<li>brrainz.harmony</li>
+		<li>skyarkhangel.HSK</li>
+	</loadAfter>
+</ModMetaData>
