@@ -14,7 +14,7 @@ Issues that prevent or significantly hinder playing Odyssey DLC with Hardcore SK
 ## 2. Steam generator requires water
 
 - **Severity:** Critical
-- **Problem:** Steam generator requires water connection (DBH water system) which doesn't work on gravship/orbital maps. No water infrastructure available in space.
+- **Problem:** Steam generator requires water connection (DBH water system). With the starting tech level, there is no researched way to obtain water. Additionally, laying water pipes on every landing site is impractical for the nomadic gravship playstyle.
 
 ---
 
@@ -34,4 +34,4 @@ Issues that prevent or significantly hinder playing Odyssey DLC with Hardcore SK
 ## 2. Паровой генератор требует воду
 
 - **Критичность:** Критическая
-- **Проблема:** Паровой генератор требует подключение воды (система воды DBH), которая не работает на картах гравикорабля/орбиты. В космосе нет водной инфраструктуры.
+- **Проблема:** Паровой генератор требует подключение воды (система воды DBH). С начальным уровнем технологий нет исследованного способа получить воду. Кроме того, прокладывать водопровод на каждой точке приземления неудобно для кочевого стиля игры на гравикорабле.
