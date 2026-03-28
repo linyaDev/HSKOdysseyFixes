@@ -10,6 +10,7 @@ Each fix has its own README in `Source/Fixes/` with detailed description.
 | [CopyPawnKindBasics](Source/Fixes/CopyPawnKindBasics/Fix_CopyPawnKindBasics.README.md) | DLL | Gravship scenario: all pawns spawn wearing vacsuits |
 | [CopyPawnKindTechHediffs](Source/Fixes/CopyPawnKindTechHediffs/Fix_CopyPawnKindTechHediffs.README.md) | DLL | Prevents random mechlink on scenario pawns |
 | [DBH_HotSpringWash](Source/Fixes/DBH_HotSpringWash/Fix_DBH_HotSpringWash.README.md) | DLL | Pawns can wash in Odyssey hot springs (DBH fix) |
+| Gravship_StartingResources | XML | Unlock Hygiene 1 research + 25 reinforced concrete blocks |
 
 ## Structure / Структура
 
