@@ -53,7 +53,9 @@ Pawn needs to wash (Need_Hygiene low)
 
 ## Fix / Исправление
 
-Harmony postfix on `DefExtensions.ResolveSurfaceWater()` adds `dbh_water` tag to the `HotSpring` TerrainDef after DBH finishes its own tagging.
+**EN:** XML patch (`Patches/Patch_DBH_HotSpringWash.xml`) adds `dbh_water` tag directly to the `HotSpring` TerrainDef. DBH's `ResolveSurfaceWater()` then picks it up when building the water grid.
+
+**RU:** XML патч (`Patches/Patch_DBH_HotSpringWash.xml`) добавляет тег `dbh_water` напрямую к TerrainDef `HotSpring`. `ResolveSurfaceWater()` в DBH подхватывает его при построении сетки воды.
 
 ## Verified / Проверено
 
