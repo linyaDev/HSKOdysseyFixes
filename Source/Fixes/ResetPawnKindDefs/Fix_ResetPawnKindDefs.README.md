@@ -52,7 +52,7 @@ Return to main menu, start Classic scenario
 | `weaponTags` | Weapon tag changes |
 | `weaponMoney` | Weapon budget |
 
-## Proposed fix for Core_SK.dll
+## Proposed fix for Core_SK.dll (Not tested)
 
 `CopyPawnKindBasics()` should work on a **copy** of the PawnKindDef instead of mutating the original:
 
