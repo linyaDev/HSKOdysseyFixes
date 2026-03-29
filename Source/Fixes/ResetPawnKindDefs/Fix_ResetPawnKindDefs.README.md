@@ -1,18 +1,44 @@
 # Fix: ResetPawnKindDefs — pawn contamination across scenarios
 
-## Bug
+## What is "contamination" / Что такое "загрязнение"
 
-**EN:** After starting Gravship scenario and returning to main menu, all other scenarios generate pawns wearing vacsuits. The contamination persists until the game is restarted.
+**EN:** PawnKindDef contamination is when one scenario's pawn settings permanently leak into another scenario. For example, after starting the Gravship scenario (where pawns wear vacsuits), switching to Classic scenario shows all pawns still wearing vacsuits — even though Classic has nothing to do with space.
 
-**RU:** После запуска сценария Гравикорабль и возврата в главное меню, все остальные сценарии генерируют пешек в скафандрах. Загрязнение сохраняется до перезапуска игры.
+This happens because HSK's `CopyPawnKindBasics()` modifies **global** PawnKindDef objects (Colonist, Tribesperson, Survivor, etc.) instead of working on temporary copies. RimWorld stores all defs as singletons in DefDatabase — once modified, they stay modified until the game process is restarted.
 
-## Root Cause
+The contamination affects:
+- **Apparel** — vacsuits from Gravship leak into all scenarios
+- **Implants** — mechlink from Mechanitor kind leaks into non-Mechanitor pawns
+- **Weapons** — weapon tags/budgets can leak between scenarios
 
-**EN:** `CopyPawnKindBasics()` in Core_SK.dll directly mutates PawnKindDef objects in the global DefDatabase. When Gravship scenario runs, it copies Vacsuit `specificApparelRequirements`, `ignoreApparelAllowChance`, and `apparelAllowHeadgearChance` from `CrewMember` onto randomized PawnKindDefs like `Colonist`, `Tribesperson`, `Survivor`, etc. These changes persist in memory for the entire game session because DefDatabase entries are global singletons.
+**RU:** Загрязнение PawnKindDef — это когда настройки пешек из одного сценария навсегда просачиваются в другой. Например, после запуска сценария Гравикорабль (где пешки носят скафандры), при переключении на сценарий Классика все пешки всё ещё в скафандрах — хотя Классика не имеет отношения к космосу.
 
-**RU:** `CopyPawnKindBasics()` в Core_SK.dll напрямую мутирует объекты PawnKindDef в глобальной DefDatabase. Когда запускается сценарий Гравикорабль, он копирует скафандровые поля (`specificApparelRequirements`, `ignoreApparelAllowChance`, `apparelAllowHeadgearChance`) из `CrewMember` в рандомизированные PawnKindDef — `Colonist`, `Tribesperson`, `Survivor` и т.д. Эти изменения сохраняются в памяти на всю сессию, потому что записи DefDatabase — глобальные синглтоны.
+Это происходит потому что `CopyPawnKindBasics()` в HSK изменяет **глобальные** объекты PawnKindDef (Colonist, Tribesperson, Survivor и т.д.) вместо работы с временными копиями. RimWorld хранит все дефы как синглтоны в DefDatabase — после изменения они остаются изменёнными до перезапуска процесса игры.
 
-## Call Chain
+Загрязнение затрагивает:
+- **Одежду** — скафандры из Гравикорабля просачиваются во все сценарии
+- **Импланты** — мехлинк от Механитора просачивается к обычным пешкам
+- **Оружие** — теги и бюджеты оружия могут просачиваться между сценариями
+
+## How it happens / Как это происходит
+
+**EN:** HSK's `SK.GeneratePawn_DefaultXenotypeRace_Patch` in Core_SK.dll randomizes PawnKindDef for extra pawns in the character selection screen. For each extra pawn it:
+
+1. Picks a random PawnKindDef from all player-faction kinds (Colonist, Tribesperson, Mechanitor, etc.)
+2. Calls `CopyPawnKindBasics(randomKind, scenarioKind)` to copy apparel/weapon settings from the scenario's kind
+3. **This mutates the global def** — `randomKind` is not a copy, it's the actual DefDatabase entry
+
+After step 3, the global `Colonist` def permanently has Gravship's vacsuit requirements. Every future use of `Colonist` (in any scenario) will generate pawns with vacsuits.
+
+**RU:** `SK.GeneratePawn_DefaultXenotypeRace_Patch` в Core_SK.dll рандомизирует PawnKindDef для дополнительных пешек на экране выбора персонажей. Для каждой дополнительной пешки он:
+
+1. Выбирает случайный PawnKindDef из всех игровых фракций (Colonist, Tribesperson, Mechanitor и т.д.)
+2. Вызывает `CopyPawnKindBasics(randomKind, scenarioKind)` для копирования настроек одежды/оружия из сценарного вида
+3. **Это мутирует глобальный деф** — `randomKind` это не копия, а реальная запись DefDatabase
+
+После шага 3 глобальный деф `Colonist` навсегда содержит скафандровые требования Гравикорабля. Каждое будущее использование `Colonist` (в любом сценарии) будет генерировать пешек в скафандрах.
+
+## Call Chain / Цепочка вызовов
 
 ```
 Start Gravship scenario
@@ -29,28 +55,34 @@ Return to main menu, start Classic scenario
   → All Classic pawns spawn wearing vacsuits
 ```
 
-## Fix
+## Fix / Исправление
 
 **EN:** At game startup, snapshot all mutable fields of player-faction PawnKindDefs. Before each scenario starts (`Scenario.PreConfigure()` Harmony prefix), restore all PawnKindDefs to their original values.
 
 **RU:** При запуске игры сохраняем снимки изменяемых полей всех PawnKindDef игровых фракций. Перед каждым запуском сценария (Harmony prefix на `Scenario.PreConfigure()`) восстанавливаем все PawnKindDef к оригинальным значениям.
 
-### Saved/restored fields
+### Saved/restored fields / Сохраняемые поля
 
-| Field | Why |
+| Field | Contamination type |
 |---|---|
-| `apparelTags` | Vacsuit tag contamination |
+| `apparelTags` | Vacsuit tag from Gravship |
 | `specificApparelRequirements` | Vacsuit body part requirements |
 | `ignoreApparelAllowChance` | Bypasses generateAllowChance=0 |
 | `apparelAllowHeadgearChance` | Forces helmet generation |
 | `apparelMoney` | Budget changes |
-| `techHediffsRequired` | Mechlink contamination |
+| `techHediffsRequired` | Mechlink from Mechanitor |
 | `techHediffsDisallowTags` | Implant restrictions |
 | `techHediffsTags` | Implant tag changes |
 | `techHediffsChance` | Implant chance changes |
 | `techHediffsMoney` | Implant budget |
 | `weaponTags` | Weapon tag changes |
 | `weaponMoney` | Weapon budget |
+
+## Limitations / Ограничения
+
+This fix only prevents contamination **between** scenarios (cross-scenario). Contamination **within** a single scenario's pawn generation (e.g. Mechanitor losing mechlink when randomly selected and overwritten by CopyPawnKindBasics during the same batch) is not fixed — it requires Core_SK.dll to work on clones.
+
+Этот фикс предотвращает загрязнение только **между** сценариями. Загрязнение **внутри** одной генерации пешек сценария (например Механитор теряет мехлинк при случайном выборе и перезаписи через CopyPawnKindBasics в той же партии) не исправлено — требуется работа с клонами в Core_SK.dll.
 
 ## Proposed fix for Core_SK.dll (Not tested)
 
