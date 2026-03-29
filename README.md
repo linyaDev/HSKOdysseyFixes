@@ -1,32 +1,20 @@
 # HSK Odyssey Fixes
 
 Fixes for Odyssey DLC compatibility issues in Hardcore SK modpack.
-Each fix has its own README in `Source/Fixes/` with detailed description.
 
 ## Fixes / Фиксы
 
 | Fix | Type | Description |
 |---|---|---|
-| [CopyPawnKindBasics](Source/Fixes/CopyPawnKindBasics/Fix_CopyPawnKindBasics.README.md) | DLL | Gravship scenario: all pawns spawn wearing vacsuits |
-| [CopyPawnKindTechHediffs](Source/Fixes/CopyPawnKindTechHediffs/Fix_CopyPawnKindTechHediffs.README.md) | DLL | Prevents random mechlink on scenario pawns |
-| [DBH_HotSpringWash](Source/Fixes/DBH_HotSpringWash/Fix_DBH_HotSpringWash.README.md) | DLL | Pawns can wash in Odyssey hot springs (DBH fix) |
-| Gravship_StartingResources | XML | Unlock Hygiene 1 research + 25 reinforced concrete blocks |
+| [DBH_HotSpringWash](Source/Fixes/DBH_HotSpringWash/Fix_DBH_HotSpringWash.README.md) | XML+DLL | Pawns can wash in Odyssey hot springs (DBH fix) |
+| Gravship_StartingResources | XML | Unlock Hygiene I research + 25 reinforced concrete blocks |
 
-## Structure / Структура
+## Fixed upstream / Исправлено в HSK ✅
 
-```
-HSKOdysseyFixes/
-├── About/About.xml
-├── Assemblies/
-│   ├── Fix_CopyPawnKindBasics.dll
-│   ├── Fix_CopyPawnKindTechHediffs.dll
-│   └── Fix_DBH_HotSpringWash.dll
-├── Source/Fixes/
-│   ├── CopyPawnKindBasics/
-│   ├── CopyPawnKindTechHediffs/
-│   └── DBH_HotSpringWash/
-└── README.md
-```
+These fixes were accepted into Core_SK.dll and no longer needed:
+- ~~CopyPawnKindBasics~~ — vacsuits on all Gravship pawns
+- ~~CopyPawnKindTechHediffs~~ — random mechlink prevention
+- ~~PowerSwitchDrawOrder~~ — cable rendering over power switch
 
 ## Requirements / Требования
 - RimWorld 1.5 / 1.6
