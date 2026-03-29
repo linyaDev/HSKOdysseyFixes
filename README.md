@@ -6,6 +6,7 @@ Fixes for Odyssey DLC compatibility issues in Hardcore SK modpack.
 
 | Fix | Type | Description |
 |---|---|---|
+| CopyPawnKindTechHediffs | DLL | Prevents random mechlink (Core_SK.dll bug: conditional instead of unconditional reset) |
 | [DBH_HotSpringWash](Source/Fixes/DBH_HotSpringWash/Fix_DBH_HotSpringWash.README.md) | XML+DLL | Pawns can wash in Odyssey hot springs (DBH fix) |
 | Gravship_StartingResources | XML | Unlock Hygiene I research + 25 reinforced concrete blocks |
 
@@ -13,7 +14,7 @@ Fixes for Odyssey DLC compatibility issues in Hardcore SK modpack.
 
 These fixes were accepted into Core_SK.dll and no longer needed:
 - ~~CopyPawnKindBasics~~ — vacsuits on all Gravship pawns
-- ~~CopyPawnKindTechHediffs~~ — random mechlink prevention
+- ~~CopyPawnKindTechHediffs~~ — partially fixed, but uses conditional `if (!=null)` instead of unconditional assign, so mechlink still not reset when scenario kind has null techHediffsRequired
 - ~~PowerSwitchDrawOrder~~ — cable rendering over power switch
 
 ## Requirements / Требования
