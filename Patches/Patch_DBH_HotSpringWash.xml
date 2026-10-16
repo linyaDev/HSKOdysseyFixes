@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+	<!-- Add dbh_water tag to HotSpring terrain so DBH recognizes it as washable water -->
+	<Operation Class="PatchOperationAdd" MayRequire="Ludeon.RimWorld.Odyssey">
+		<xpath>Defs/TerrainDef[defName="HotSpring"]</xpath>
+		<value>
+			<tags>
+				<li>dbh_water</li>
+			</tags>
+		</value>
+	</Operation>
+
+</Patch>
